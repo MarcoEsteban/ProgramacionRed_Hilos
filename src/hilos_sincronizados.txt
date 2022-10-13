@@ -1,0 +1,66 @@
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#clase "Principal.java"
+public class Principal {
+	
+	public static void main(String[] arg) {
+		int a[]= {1,2,3,4,5};
+		MiHilo h1 = MiHilo.creaInicia("HILO #1",a);
+		MiHilo h2 = MiHilo.creaInicia("HILO #2",a);
+	}
+}
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#clase "SumaArreglo.java"
+public class SumaArreglo {
+	private int acumula;
+
+	int sumaElArray(int dat[]) {
+		acumula=0;
+		for(int i=0; i<dat.length;i++) {
+			acumula = acumula + dat[i];
+			System.out.println("El acumulado de "+Thread.currentThread().getName()+" es "+acumula);
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return acumula;
+	}
+}
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#clase "MiHilo.java"
+public class MiHilo extends Thread {
+	static SumaArreglo sumaarray = new SumaArreglo();
+	int arr[];
+	int xtotal;
+	
+	MiHilo(int nums[]){
+		arr=nums;
+	}
+	
+	public static MiHilo creaInicia(String nombre, int nums[]) {
+		MiHilo miHilo = new MiHilo(nums);
+		miHilo.start();
+		miHilo.setName(nombre);
+		return miHilo;
+	}
+	
+	@Override
+	public void run() {
+			System.out.println("Iniciando "+Thread.currentThread().getName());
+
+			xtotal=sumaarray.sumaElArray(arr);
+	
+			System.out.println("---TOTAL "+Thread.currentThread().getName()+" : "+xtotal);
+			
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	}
+}

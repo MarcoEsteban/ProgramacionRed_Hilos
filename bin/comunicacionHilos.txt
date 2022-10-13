@@ -1,0 +1,67 @@
+#COMUNICACION ENTRE HILOS
+--------------------------------------------------
+#Consumidor.java
+public class Consumidor extends Thread {
+	Monitor mo;
+	Consumidor(Monitor xmo){
+		this.mo=xmo;
+	}
+	public static Consumidor creaInicia(String nombre, Monitor xmo) {
+		Consumidor consum = new Consumidor(xmo);
+		consum.start();
+		consum.setName(nombre);
+		return consum;
+	}
+	public void run() {
+		while(true) {
+			mo.getRecoger();
+		}
+	}
+}
+
+--------------------------------------------------
+#Productor.java
+public class Productor extends Thread{
+	Monitor mo;
+	Productor(Monitor xmo){
+		this.mo=xmo;
+	}
+	public static Productor creaInicia(String nombre, Monitor xmo) {
+		Productor prod = new Productor(xmo);
+		prod.start();
+		prod.setName(nombre);
+		return prod;
+	}
+	
+	public void run() {
+		int i=0;
+		while (true) {
+			mo.putColocar(i++);
+		}
+	}	
+}
+
+-----------------------------------------------
+#Monitor.java
+public class Monitor {
+	int n;
+	synchronized int getRecoger() {
+		System.out.println("Recogiendo::"+this.n);
+		return this.n;
+	}
+	synchronized void putColocar(int xcol) {
+		this.n=xcol;
+		System.out.println("Colocando::"+xcol);
+	}
+}
+
+------------------------------------------------
+#Principal.java
+public class Principal {
+	public static void main(String[] arg) {
+		Monitor xmo = new Monitor();
+		Productor pro = Productor.creaInicia("HILO #prod",xmo);
+		Consumidor con = Consumidor.creaInicia("HILO #cons",xmo);
+	}
+
+}
